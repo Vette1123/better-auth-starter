@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   KeyRound,
+  LayoutDashboard,
   LockKeyhole,
   MailCheck,
   ShieldCheck,
@@ -10,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getSession } from "@/lib/get-session";
 
 const chips = [
   { icon: ShieldCheck, label: "Email verification" },
@@ -18,7 +20,10 @@ const chips = [
   { icon: LockKeyhole, label: "Google OAuth" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+  const firstName = session?.user.name?.split(" ")[0];
+
   return (
     <main className="bg-aurora relative flex min-h-svh flex-col">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6">
@@ -30,19 +35,37 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Link
-            href="/login"
-            className={cn(buttonVariants({ variant: "ghost" }), "rounded-full")}
-          >
-            Log in
-          </Link>
+          {session ? (
+            <Link
+              href="/dashboard"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "rounded-full",
+              )}
+            >
+              <LayoutDashboard className="size-4" />
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "rounded-full",
+              )}
+            >
+              Log in
+            </Link>
+          )}
         </div>
       </header>
 
       <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 pb-24 text-center">
         <span className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur">
           <Sparkles className="size-3.5 text-primary" />
-          Production-ready auth starter
+          {session
+            ? `You're signed in${firstName ? `, ${firstName}` : ""}`
+            : "Production-ready auth starter"}
         </span>
 
         <h1 className="font-heading text-5xl font-semibold leading-[1.05] sm:text-6xl">
@@ -57,25 +80,51 @@ export default function Home() {
         </p>
 
         <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
-          <Link
-            href="/signup"
-            className={cn(
-              buttonVariants({ size: "lg" }),
-              "h-12 rounded-xl px-7 text-[0.95rem]",
-            )}
-          >
-            Get started
-            <ArrowRight className="size-4" />
-          </Link>
-          <Link
-            href="/login"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "lg" }),
-              "h-12 rounded-xl px-7 text-[0.95rem]",
-            )}
-          >
-            Log in
-          </Link>
+          {session ? (
+            <>
+              <Link
+                href="/dashboard"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "h-12 rounded-xl px-7 text-[0.95rem]",
+                )}
+              >
+                Go to dashboard
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/settings"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "h-12 rounded-xl px-7 text-[0.95rem]",
+                )}
+              >
+                Account settings
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/signup"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "h-12 rounded-xl px-7 text-[0.95rem]",
+                )}
+              >
+                Get started
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/login"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "h-12 rounded-xl px-7 text-[0.95rem]",
+                )}
+              >
+                Log in
+              </Link>
+            </>
+          )}
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5">
