@@ -6,7 +6,7 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
 
 - Email/password signup and login with **required email verification**
 - Password reset via email
-- Google and GitHub OAuth
+- Google OAuth
 - Protected routes with server-side session validation
 - Account settings: update name, change password, view and revoke sessions
 - Rate limiting on auth endpoints
@@ -88,13 +88,11 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
 | `BETTER_AUTH_URL` | Yes | Base URL of the app (`http://localhost:3000` in dev) | — |
 | `NEXT_PUBLIC_APP_URL` | Yes | Same base URL, exposed to the browser | — |
 | `RESEND_API_KEY` | No (dev) / Yes (prod) | Resend API key for sending emails | [resend.com](https://resend.com) |
-| `EMAIL_FROM` | Yes | Sender address (`onboarding@resend.dev` for testing) | Your verified Resend sender |
+| `EMAIL_FROM` | Yes | Sender address on a domain verified in Resend | Your verified Resend domain |
 | `GOOGLE_CLIENT_ID` | No* | Google OAuth client ID | [Google Cloud Console](https://console.cloud.google.com) |
 | `GOOGLE_CLIENT_SECRET` | No* | Google OAuth client secret | Google Cloud Console |
-| `GITHUB_CLIENT_ID` | No* | GitHub OAuth App client ID | [GitHub Developer Settings](https://github.com/settings/developers) |
-| `GITHUB_CLIENT_SECRET` | No* | GitHub OAuth App client secret | GitHub Developer Settings |
 
-\* OAuth vars are optional only if you remove the corresponding social provider from `src/lib/auth.ts`. Both are required for the default configuration.
+\* The Google OAuth vars are optional: if unset, the provider is skipped and the "Continue with Google" button simply won't work until they're added. Email/password auth works without them.
 
 ---
 
@@ -108,15 +106,8 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
 4. Under **Authorized redirect URIs**, add:
    - `http://localhost:3000/api/auth/callback/google`
    - `https://your-domain.com/api/auth/callback/google` (production)
-5. Copy the **Client ID** and **Client Secret** into `.env`.
-
-### GitHub
-
-1. Go to **GitHub → Settings → Developer settings → OAuth Apps → New OAuth App**.
-2. Set **Authorization callback URL** to:
-   - `http://localhost:3000/api/auth/callback/github`
-   - Add `https://your-domain.com/api/auth/callback/github` for production (create a separate app or update the URL).
-3. Copy the **Client ID** and generate a **Client Secret** into `.env`.
+5. Under **Authorized JavaScript origins**, add `http://localhost:3000` (and your production origin).
+6. Copy the **Client ID** and **Client Secret** into `.env`.
 
 ---
 
@@ -128,7 +119,7 @@ For **production** (or to test real email delivery in dev):
 
 1. Create an account at [resend.com](https://resend.com).
 2. Generate an API key and add it to `RESEND_API_KEY`.
-3. Set `EMAIL_FROM` to a sender address on a domain you have verified in Resend. The sandbox address `onboarding@resend.dev` works for testing without domain verification.
+3. In Resend, go to **Domains → Add Domain**, add your domain, and create the DNS records it shows (SPF/DKIM). Once verified, set `EMAIL_FROM` to an address on that domain (e.g. `noreply@yourdomain.com`). The sandbox address `onboarding@resend.dev` works for quick testing but only delivers to your own Resend account email.
 
 ---
 
@@ -187,7 +178,7 @@ src/
 2. Import the project in [Vercel](https://vercel.com).
 3. Add all environment variables from `.env.example` in the Vercel project settings.
 4. Set `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` to your production domain (e.g. `https://your-domain.com`).
-5. Update the OAuth callback URLs in Google Cloud Console and GitHub to include the production URLs.
+5. Update the OAuth callback URL in Google Cloud Console to include the production URL.
 6. Push the schema to the production database:
 
    ```bash
