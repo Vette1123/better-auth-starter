@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { listSessions, revokeSession } from "@/lib/auth-client";
+import { listSessions, revokeSession, useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type SessionRow = { id: string; token: string; userAgent?: string | null; createdAt: string | Date };
 
 export function SessionsList() {
+  const { data: current } = useSession();
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   async function load() {
     const { data } = await listSessions();
@@ -24,13 +25,21 @@ export function SessionsList() {
     <Card>
       <CardHeader><CardTitle>Active sessions</CardTitle></CardHeader>
       <CardContent className="space-y-2">
-        {sessions.length === 0 && <p className="text-sm text-muted-foreground">No other sessions.</p>}
-        {sessions.map((s) => (
-          <div key={s.id} className="flex items-center justify-between rounded border p-2 text-sm">
-            <span className="truncate">{s.userAgent ?? "Unknown device"}</span>
-            <Button variant="ghost" size="sm" onClick={() => revoke(s.token)}>Revoke</Button>
-          </div>
-        ))}
+        {sessions.length === 0 && <p className="text-sm text-muted-foreground">No active sessions.</p>}
+        {sessions.map((s) => {
+          const isCurrent = s.token === current?.session.token;
+          return (
+            <div key={s.id} className="flex items-center justify-between rounded border p-2 text-sm">
+              <span className="truncate">
+                {s.userAgent ?? "Unknown device"}
+                {isCurrent && <span className="ml-2 text-xs text-muted-foreground">(this device)</span>}
+              </span>
+              {!isCurrent && (
+                <Button variant="ghost" size="sm" onClick={() => revoke(s.token)}>Revoke</Button>
+              )}
+            </div>
+          );
+        })}
       </CardContent>
     </Card>
   );
