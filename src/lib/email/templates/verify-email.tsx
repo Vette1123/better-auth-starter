@@ -1,19 +1,14 @@
-import { Body, Button, Container, Head, Heading, Html, Text } from "@react-email/components";
+import { EmailLayout } from "./email-layout";
 
 export function VerifyEmail({ url }: { url: string }) {
   return (
-    <Html>
-      <Head />
-      <Body style={{ fontFamily: "sans-serif", background: "#f6f6f6", padding: "24px" }}>
-        <Container style={{ background: "#fff", borderRadius: 8, padding: 32 }}>
-          <Heading>Verify your email</Heading>
-          <Text>Click the button below to verify your email address.</Text>
-          <Button href={url} style={{ background: "#111", color: "#fff", padding: "12px 20px", borderRadius: 6 }}>
-            Verify email
-          </Button>
-          <Text style={{ color: "#888", fontSize: 12 }}>If you didn&apos;t create an account, ignore this email.</Text>
-        </Container>
-      </Body>
-    </Html>
+    <EmailLayout
+      preview="Confirm your email to activate your account"
+      heading="Verify your email"
+      intro="Welcome aboard! Confirm this is your email address to activate your account and get started."
+      buttonText="Verify email address"
+      url={url}
+      footnote="If you didn't create an account, you can safely ignore this email."
+    />
   );
 }

@@ -1,21 +1,95 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  KeyRound,
+  LockKeyhole,
+  MailCheck,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+const chips = [
+  { icon: ShieldCheck, label: "Email verification" },
+  { icon: KeyRound, label: "Password reset" },
+  { icon: MailCheck, label: "Resend emails" },
+  { icon: LockKeyhole, label: "Google OAuth" },
+];
 
 export default function Home() {
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-6 px-4 text-center">
-      <h1 className="text-4xl font-bold">better-auth-starter</h1>
-      <p className="max-w-md text-muted-foreground">
-        A production-ready Next.js auth starter: email/password, verification, reset, and Google OAuth.
-      </p>
-      <div className="flex gap-3">
-        <Link href="/signup" className={buttonVariants({ size: "lg" })}>
-          Get started
-        </Link>
-        <Link href="/login" className={buttonVariants({ variant: "outline", size: "lg" })}>
-          Log in
-        </Link>
-      </div>
+    <main className="bg-aurora relative flex min-h-svh flex-col">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6">
+        <div className="flex items-center gap-2.5 font-heading text-lg font-semibold">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <LockKeyhole className="size-4" />
+          </span>
+          better-auth-starter
+        </div>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ variant: "ghost" }), "rounded-full")}
+          >
+            Log in
+          </Link>
+        </div>
+      </header>
+
+      <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 pb-24 text-center">
+        <span className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur">
+          <Sparkles className="size-3.5 text-primary" />
+          Production-ready auth starter
+        </span>
+
+        <h1 className="font-heading text-5xl font-semibold leading-[1.05] sm:text-6xl">
+          Authentication
+          <br />
+          you can ship today.
+        </h1>
+
+        <p className="mt-6 max-w-md text-lg text-muted-foreground">
+          Email &amp; password with verification, password reset, and Google
+          sign-in — built on Better Auth, Neon, and Drizzle.
+        </p>
+
+        <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
+          <Link
+            href="/signup"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "h-12 rounded-xl px-7 text-[0.95rem]",
+            )}
+          >
+            Get started
+            <ArrowRight className="size-4" />
+          </Link>
+          <Link
+            href="/login"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "h-12 rounded-xl px-7 text-[0.95rem]",
+            )}
+          >
+            Log in
+          </Link>
+        </div>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5">
+          {chips.map((c) => (
+            <span
+              key={c.label}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/50 px-3 py-1.5 text-sm text-muted-foreground backdrop-blur"
+            >
+              <c.icon className="size-3.5 text-primary" />
+              {c.label}
+            </span>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
