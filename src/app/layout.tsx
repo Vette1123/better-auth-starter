@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "better-auth-starter",
   description:
-    "Production-ready Next.js auth starter with Better Auth, Neon Postgres, email/password, verification, password reset, and Google & GitHub OAuth.",
+    "Production-ready Next.js auth starter with Better Auth, Neon Postgres, email/password, verification, password reset, and Google OAuth.",
 };
 
 export default function RootLayout({
