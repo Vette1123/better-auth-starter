@@ -11,12 +11,18 @@ async function deliver(opts: { to: string; subject: string; html: string; devLab
     console.log(`\n[email:${opts.devLabel}] to=${opts.to}\n${opts.url}\n`);
     return;
   }
-  await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from: env.EMAIL_FROM,
     to: opts.to,
     subject: opts.subject,
     html: opts.html,
   });
+  if (error) {
+    // Resend returns errors in the result rather than throwing — surface them.
+    console.error(`[email:error] ${opts.devLabel} to=${opts.to}:`, error);
+    throw new Error(`Failed to send ${opts.devLabel} email: ${error.message ?? "unknown error"}`);
+  }
+  console.log(`[email:sent] ${opts.devLabel} to=${opts.to} id=${data?.id}`);
 }
 
 export async function sendVerificationEmail({ to, url }: { to: string; url: string }) {
