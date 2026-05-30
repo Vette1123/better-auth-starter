@@ -23,10 +23,12 @@ type SessionRow = {
 export function SessionsList() {
   const { data: current } = useSession();
   const [sessions, setSessions] = useState<SessionRow[]>([]);
+  const [loading, setLoading] = useState(true);
 
   async function load() {
     const { data } = await listSessions();
     setSessions((data as SessionRow[]) ?? []);
+    setLoading(false);
   }
   useEffect(() => {
     load();
@@ -48,10 +50,18 @@ export function SessionsList() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2.5 px-6">
-        {sessions.length === 0 && (
+        {loading &&
+          [0, 1].map((i) => (
+            <div
+              key={i}
+              className="h-[66px] animate-pulse rounded-xl border border-border/60 bg-muted/40"
+            />
+          ))}
+        {!loading && sessions.length === 0 && (
           <p className="text-sm text-muted-foreground">No active sessions.</p>
         )}
-        {sessions.map((s) => {
+        {!loading &&
+          sessions.map((s) => {
           const isCurrent = s.token === current?.session.token;
           return (
             <div
