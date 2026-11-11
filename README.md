@@ -1,6 +1,6 @@
 # Better Auth Starter
 
-A production-ready Next.js 16 authentication starter with email/password, OAuth, email verification, and account management — all wired up and ready to deploy.
+A Next.js 16 authentication starter with email/password, OAuth, email verification, and account management.
 
 **Features**
 
@@ -10,7 +10,7 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
 - Protected routes with server-side session validation
 - Account settings: update name, change password, view and revoke sessions
 - Rate limiting on auth endpoints
-- Console email fallback for zero-config local development
+- Console email fallback, so local development needs no email setup
 
 ---
 
@@ -55,12 +55,12 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
    copy .env.example .env
    ```
 
-4. **Fill in your environment variables** — see [Environment Variables](#environment-variables) below.
+4. **Fill in your environment variables**. See [Environment Variables](#environment-variables) below.
 
 5. **Create a Neon database**
 
    - Go to [neon.tech](https://neon.tech) and create a new project.
-   - **Do not enable "Neon Auth"** — Better Auth handles authentication; only the raw Postgres connection string is needed.
+   - **Do not enable "Neon Auth"**. Better Auth handles authentication, so you only need the raw Postgres connection string.
    - Copy the connection string into `DATABASE_URL`.
 
 6. **Push the database schema**
@@ -92,7 +92,7 @@ A production-ready Next.js 16 authentication starter with email/password, OAuth,
 | `GOOGLE_CLIENT_ID` | No* | Google OAuth client ID | [Google Cloud Console](https://console.cloud.google.com) |
 | `GOOGLE_CLIENT_SECRET` | No* | Google OAuth client secret | Google Cloud Console |
 
-\* The Google OAuth vars are optional: if unset, the provider is skipped and the "Continue with Google" button simply won't work until they're added. Email/password auth works without them.
+\* The Google OAuth vars are optional: if unset, the provider is skipped and the "Continue with Google" button won't work until they're added. Email/password auth works without them.
 
 ---
 
@@ -194,11 +194,11 @@ src/
 
 **`pnpm.overrides` for `better-call` and `kysely`**
 
-`package.json` pins `better-call@1.3.5` and `kysely@0.28.17` via `pnpm.overrides`. These are required for Better Auth 1.6.12 to build correctly. Do not remove or change these overrides; doing so will cause build failures.
+`package.json` pins `better-call@1.3.5` and `kysely@0.28.17` via `pnpm.overrides`. Better Auth 1.6.12 needs them to build. Don't remove or change them, or the build will fail.
 
 **Emails not sending in development**
 
-If `RESEND_API_KEY` is not set, the app intentionally falls back to logging email links to the server console (`stdout`). Check your terminal output for verification and password-reset URLs. This is expected behaviour — no action needed for local dev.
+If `RESEND_API_KEY` is not set, the app intentionally falls back to logging email links to the server console (`stdout`). Check your terminal output for verification and password-reset URLs. This is expected, and local dev needs no action.
 
 **`NEXT_PUBLIC_APP_URL` vs `BETTER_AUTH_URL`**
 
